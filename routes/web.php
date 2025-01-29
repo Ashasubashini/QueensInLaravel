@@ -6,6 +6,13 @@ use App\Http\Controllers\ProductController;
 Route::get('/', function () {
     return view('home');
 });
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
+Route::get('/history', function () {
+    return view('history');
+})->name('history');
 
 Route::middleware([
     'auth:sanctum',
@@ -20,4 +27,4 @@ Route::middleware([
 //product
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
-//Route::get('/{id}', [ProductController::class, 'show'])->name('show');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');

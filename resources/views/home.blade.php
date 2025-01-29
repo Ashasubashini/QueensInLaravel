@@ -108,24 +108,35 @@
         </div>
 
         <section class="max-w-7xl mx-auto py-12">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <h1 class="text-4xl md:text-5xl font-bold text-emerald-600 w-full md:w-1/2 text-left">
+                    Explore the Queens<br>
+                    watch collection
+                </h1>
+        
+                <p class="text-gray-700 text-lg w-full md:w-1/2 mt-4 md:mt-0 text-left">
+                    You will discover Queens exudes elegance and luxury. Our timepieces are crafted with
+                    precious materials and attention to detail, making them the perfect accessory for those who
+                    appreciate sophistication and style.<br><br>
+                    Explore our collection and find the ideal watch that complements your unique taste.
+                </p>
+            </div>
             @foreach ($products as $product)
             <div class="product-card">
                 <img class="product w-full h-96 object-cover rounded-lg shadow-lg" src="{{ $product->image }}" alt="{{ $product->name }}">
                 <div class="card-info">
                     <h2 class="text-2xl font-semibold text-gray-900">{{ $product->name }}</h2>
                     <p class="text-gray-600 mt-2">{{ $product->small_description }}</p>
-                    <button class="discover-btn">
-                        discover more
-                    </button>
+                    <a href="{{ route('products.show', $product->id) }}" class="discover-btn">
+                        Discover More
+                    </a>
                 </div>
             </div>
             @endforeach
         </section>
+        @include('components.footer')
 
     </div>
-    <div>
-        
-    </div>
+    
 </body>
-
 </html>
