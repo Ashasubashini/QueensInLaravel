@@ -17,6 +17,8 @@
     @else
     @endif
 </head>
+@extends('layouts.app')
+
 
 
 <body class="font-sans antialiased">
@@ -34,6 +36,27 @@
                 </video>
             </div>
         </div>
+
+        @section('content')
+            <section class="max-w-7xl mx-auto py-12" x-data>
+                @foreach ($products as $product)
+                    <div 
+                        class="relative overflow-hidden transform transition-all duration-700 ease-in-out opacity-0 translate-y-10"
+                        x-intersect.once="$el.classList.remove('opacity-0', 'translate-y-10')"
+                    >
+                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-96 object-cover rounded-lg shadow-lg">
+                        <div class="mt-6 text-center">
+                            <h2 class="text-2xl font-semibold text-gray-900">{{ $product->name }}</h2>
+                            <p class="text-gray-600 mt-2">{{ $product->small_description }}</p>
+                            <a href="{{ route('product.show', $product->id) }}" class="mt-4 inline-block bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition">
+                                Discover More
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </section>
+        @endsection
+
     </div>
     <div>
         

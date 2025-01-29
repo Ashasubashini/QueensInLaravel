@@ -64,4 +64,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function currentTeam()
+    {
+        return $this->belongsTo(Team::class, 'current_team_id')->withDefault([
+            'name' => 'Default Team',
+        ]);
+    }
 }
