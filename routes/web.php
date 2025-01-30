@@ -34,6 +34,14 @@ Route::middleware([
     })->name('dashboard');
 });
 
+//roles
+Route::get('/admin', function () {
+    if (Auth::user()->role !== 'admin') {
+        abort(403, 'Unauthorized access');
+    }
+    return view('admin.dashboard');
+})->middleware(['auth']);
+
 //product
 
 Route::get('/', [ProductController::class, 'index'])->name('home');
