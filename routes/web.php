@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
+//pages
 Route::get('/', function () {
     return view('home');
 });
@@ -13,6 +14,15 @@ Route::get('/about', function () {
 Route::get('/history', function () {
     return view('history');
 })->name('history');
+
+Route::get('/service', function () {
+    return view('service');
+})->name('service');
+
+Route::get('/watchmaking', function () {
+    return view('watchmaking');
+})->name('watchmaking');
+
 
 Route::middleware([
     'auth:sanctum',

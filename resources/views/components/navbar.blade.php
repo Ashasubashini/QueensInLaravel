@@ -29,8 +29,8 @@
              class="absolute left-0 z-50 w-48 py-2 mt-2 bg-white rounded-lg shadow-xl">
             <a href="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Home</a>
             <a href="/about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">About</a>
-            <a href="/services" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Services</a>
-            <a href="/contact" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Contact</a>
+            <a href="/service" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Service& Care</a>
+            <a href="/watchmaking" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50">Watch Making</a>
         </div>
     </div>
 

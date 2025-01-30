@@ -24,6 +24,8 @@
                 <a href="{{ route('home') }}" class="hover:text-gray-300">Home</a>
                 <a href="{{ route('about') }}" class="hover:text-gray-300">About Us</a>
                 <a href="{{ route('history') }}" class="hover:text-gray-300">History</a>
+                <a href="{{ route('service') }}" class="hover:text-gray-300">Service & Care</a>
+                <a href="{{ route('watchmaking') }}" class="hover:text-gray-300">Watch Making</a>
 
             </div>
             
