@@ -1,9 +1,11 @@
+<x-navbar /> <!-- ✅ Include Custom Navbar -->
+
 <x-app-layout>
    
     @if(auth()->user()->role === 'admin')
-        <p>Welcome, Admin!</p>
+        @include('admin-dashboard')
     @else
-        <p>Welcome, User!</p>
+        @include('user.dashboard') 
     @endif
     
 </x-app-layout>

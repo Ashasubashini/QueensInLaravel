@@ -16,14 +16,13 @@
             <x-navbar />
         </div>
 
-        <div class="pt-16"> <!-- Added padding-top to account for fixed navbar -->
+        <div class="pt-16"> 
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div class="bg-white rounded-xl shadow-xl overflow-hidden">
                     <div class="md:flex">
-                        <!-- Left Side: Product Image, Name, Small Description, Price, Quantity, and Buttons -->
                         <div class="md:w-1/2 p-8">
                             <img class="w-full h-96 object-cover rounded-lg mb-6" 
-                                src="{{ asset( $product->image) }}" 
+                                src="{{ asset($product->image) }}" 
                                 alt="{{ $product->name }}">
 
                             <h1 class="text-4xl font-semibold text-gray-900 mb-4">
@@ -47,11 +46,22 @@
                                 </span>
                             </div>
 
+                            <!-- Quantity Control -->
+                            <div class="mb-6">
+                                <label for="quantity" class="text-lg font-semibold">Quantity</label>
+                                <input id="quantity" type="number" min="1" max="{{ $product->quantity }}" value="1" class="mt-2 p-2 border border-gray-300 rounded-lg w-full" onchange="updateQuantity()">
+                            </div>
+
+                            <!-- Error Message -->
+                            <div id="error-message" class="text-red-500 hidden mb-4">
+                                You can't add more than 3 items to the cart.
+                            </div>
+
                             <div class="flex space-x-4">
-                                <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
+                                <button type="submit" id="add-to-cart" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
                                     Add to Cart
                                 </button>
-                                <button class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
+                                <button id="buy-now" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
                                     Buy Now
                                 </button>
                             </div>
@@ -70,6 +80,57 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('add-to-cart').addEventListener('click', function () {
+            @guest
+                // Redirect to login if the user is not authenticated
+                window.location.href = "{{ route('login') }}";
+            @else
+                var quantity = parseInt(document.getElementById('quantity').value);
+                if (quantity > 3) {
+                    document.getElementById('error-message').classList.remove('hidden');
+                } else {
+                    document.getElementById('error-message').classList.add('hidden');
+                    alert('Product added to cart');
+                    // Make an AJAX request or form submission to add the product to the cart
+                }
+            @endguest
+        });
+    
+        document.getElementById('buy-now').addEventListener('click', function () {
+            @guest
+                // Redirect to login if the user is not authenticated
+                window.location.href = "{{ route('login') }}";
+            @else
+                var quantity = parseInt(document.getElementById('quantity').value);
+                alert('Proceeding to checkout with ' + quantity + ' items');
+                // Redirect to the checkout page
+            @endguest
+        });
+       
+        document.getElementById('add-to-cart').addEventListener('click', function () {
+            var quantity = document.getElementById('quantity').value;
+            var productId = "{{ $product->id }}";
+
+            fetch("{{ route('cart.add') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: quantity
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 
 </html>
