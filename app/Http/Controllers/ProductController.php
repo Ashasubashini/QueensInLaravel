@@ -19,4 +19,8 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         return view('product.show', compact('product'));
     }
+    public function showProducts() {
+        $products = Product::all();  // Fetch all products from the database
+        return view('admin.dashboard', compact('products'));  // Pass products to the view
+    }
 }

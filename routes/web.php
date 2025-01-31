@@ -8,9 +8,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
 
 //pages
-Route::get('/', function () {
-    return view('home');
-});
+//Route::get('/', function () {
+// return view('home');
+//});
 Route::get('/about', function () {
     return view('about');
 })->name('about');
@@ -67,4 +67,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+Route::get('/admin/products', [ProductController::class, 'showProduct'])->name('admin.showProduct');
 
+Route::middleware(['auth'])->group(function () {
+    Route::delete('/admin/products/{id}', [ProductController::class, 'removeProduct'])->name('admin.removeProduct');
+});
