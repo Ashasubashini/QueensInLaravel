@@ -49,3 +49,8 @@ Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.
 Route::get('/admin/products/{id}/edit', [ProductController::class, 'edit'])->name('product.editProduct');
 Route::put('/admin/products/{id}', [ProductController::class, 'updateProduct'])->name('admin.updateProduct');
 Route::delete('/admin/products/{id}', [ProductController::class, 'removeProduct'])->name('admin.removeProduct');
+Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.storeProduct');
+Route::get('/admin/products/add', function () {
+    return view('product.addProduct');  // Correct view path
+})->name('admin.addProduct');
+Route::get('/admin/products/list', [ProductController::class, 'showProducts'])->name('admin.productList');

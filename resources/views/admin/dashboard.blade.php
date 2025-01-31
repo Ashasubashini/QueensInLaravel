@@ -15,7 +15,9 @@
             <!-- Product List Card -->
             <div class="bg-white shadow-md rounded-lg p-6">
                 <h3 class="text-xl font-semibold mb-4">Product List</h3>
-                {{-- Include product list --}}
+                <a href="{{ route(name: 'admin.addProduct') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md">
+                    Add Product
+                </a>
                 @include('admin.productlist')
             </div>
         </div>

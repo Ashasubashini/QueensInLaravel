@@ -34,37 +34,37 @@
                 <!-- Product Name -->
                 <div class="mt-6">
                     <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
-                    <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" required>
                 </div>
 
                 <!-- Small Description -->
                 <div class="mt-6">
                     <label for="small_description" class="block text-sm font-medium text-gray-700">Small Description</label>
-                    <textarea id="small_description" name="small_description" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('small_description', $product->small_description) }}</textarea>
+                    <textarea id="small_description" name="small_description" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">{{ old('small_description', $product->small_description) }}</textarea>
                 </div>
 
                 <!-- Large Description -->
                 <div class="mt-6">
                     <label for="large_description" class="block text-sm font-medium text-gray-700">Large Description</label>
-                    <textarea id="large_description" name="large_description" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('large_description', $product->large_description) }}</textarea>
+                    <textarea id="large_description" name="large_description" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">{{ old('large_description', $product->large_description) }}</textarea>
                 </div>
 
                 <!-- Price -->
                 <div class="mt-6">
                     <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-                    <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" required>
                 </div>
 
                 <!-- Quantity -->
                 <div class="mt-6">
                     <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
-                    <input type="number" id="quantity" name="quantity" value="{{ old('quantity', $product->quantity) }}" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="number" id="quantity" name="quantity" value="{{ old('quantity', $product->quantity) }}" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" required>
                 </div>
 
                 <!-- Image -->
                 <div class="mt-6">
                     <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                    <input type="file" id="image" name="image" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="file" id="image" name="image" class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     @if($product->image)
                         <p class="mt-2 text-sm text-gray-500">Current image:</p>
                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover mt-2 rounded-lg border border-gray-200">
@@ -73,7 +73,7 @@
 
                 <!-- Submit Button -->
                 <div class="mt-8 flex justify-end">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">Update Product</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">Update Product</button>
                 </div>
             </form>
 

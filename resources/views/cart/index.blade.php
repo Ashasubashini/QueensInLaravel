@@ -8,7 +8,6 @@
             @foreach ($cartItems as $item)
                 <div class="flex justify-between items-center border-b pb-4 mb-4">
                     <div class="flex items-center">
-                        <!-- Check if product exists before accessing its image -->
                         @if($item->product)
                             <img src="{{ asset('storage/' . $item->product->image) }}" class="w-20 h-20 object-cover rounded-lg">
                             <div class="ml-4">
