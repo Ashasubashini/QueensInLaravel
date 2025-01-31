@@ -3,7 +3,7 @@
 <x-app-layout>
    
     @if(auth()->user()->role === 'admin')
-        @include('admin-dashboard')
+        @include('admin.dashboard')
     @else
         @include('user.dashboard') 
     @endif

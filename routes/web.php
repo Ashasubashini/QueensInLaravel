@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminDashboardController;
 
 //pages
 Route::get('/', function () {
@@ -57,3 +59,13 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 });
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [UserController::class, 'showUsers'])->name('admin.dashboard');
+    Route::delete('/admin/users/{id}', [UserController::class, 'removeUser'])->name('admin.removeUser');
+});
+Route::get('/admindashboard', [AdminDashboardController::class, 'index'])->name('admindashboard')->middleware('auth');
+
+
+
+

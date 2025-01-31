@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    // Add product to cart
     public function addToCart(Request $request)
     {
         $request->validate([
