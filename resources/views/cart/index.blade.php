@@ -8,11 +8,16 @@
             @foreach ($cartItems as $item)
                 <div class="flex justify-between items-center border-b pb-4 mb-4">
                     <div class="flex items-center">
-                        <img src="{{ asset($item->product->image) }}" class="w-20 h-20 object-cover rounded-lg">
-                        <div class="ml-4">
-                            <h2 class="text-xl font-semibold">{{ $item->product->name }}</h2>
-                            <p class="text-gray-600">${{ $item->product->price }} x {{ $item->quantity }}</p>
-                        </div>
+                        <!-- Check if product exists before accessing its image -->
+                        @if($item->product)
+                            <img src="{{ asset('storage/' . $item->product->image) }}" class="w-20 h-20 object-cover rounded-lg">
+                            <div class="ml-4">
+                                <h2 class="text-xl font-semibold">{{ $item->product->name }}</h2>
+                                <p class="text-gray-600">${{ $item->product->price }} x {{ $item->quantity }}</p>
+                            </div>
+                        @else
+                            <p class="text-gray-600">Product not found</p>
+                        @endif
                     </div>
                     <form action="{{ route('cart.remove', $item->id) }}" method="POST">
                         @csrf

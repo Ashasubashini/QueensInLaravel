@@ -21,8 +21,8 @@
                 <div class="bg-white rounded-xl shadow-xl overflow-hidden">
                     <div class="md:flex">
                         <div class="md:w-1/2 p-8">
-                            <img class="w-full h-96 object-cover rounded-lg mb-6" 
-                                src="{{ asset($product->image) }}" 
+                            <img class="product w-full h-96 object-cover rounded-lg shadow-lg" 
+                                src="{{ Storage::url($product->image) }}" 
                                 alt="{{ $product->name }}">
 
                             <h1 class="text-4xl font-semibold text-gray-900 mb-4">

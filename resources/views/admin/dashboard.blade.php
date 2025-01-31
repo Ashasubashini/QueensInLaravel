@@ -5,11 +5,19 @@
 
             <p>Welcome, {{ auth()->user()->name }}!</p>
 
-            {{-- Include user list --}}
-            @include('admin.userlist')
+            <!-- User List Card -->
+            <div class="bg-white shadow-md rounded-lg mb-6 p-6">
+                <h3 class="text-xl font-semibold mb-4">User List</h3>
+                {{-- Include user list --}}
+                @include('admin.userlist')
+            </div>
 
-            {{-- Include product list --}}
-            @include('admin.productlist')
+            <!-- Product List Card -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Product List</h3>
+                {{-- Include product list --}}
+                @include('admin.productlist')
+            </div>
         </div>
     </div>
 </div>

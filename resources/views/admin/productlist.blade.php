@@ -22,13 +22,19 @@
                     <td class="px-6 py-4">{{ $product->price }}</td>
                     <td class="px-6 py-4">{{ $product->quantity }}</td>
                     <td class="px-6 py-4">
-                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover">
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover">
                     </td>
                     <td class="px-6 py-4">
-                        <form action="{{ route('admin.removeProduct', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this product?');">
+                        <!-- Edit Button -->
+                        <a href="{{ route('product.editProduct', $product->id) }}" class="text-blue-500 hover:text-blue-700">Edit</a>
+
+                        <!-- Remove Button -->
+                        <form action="{{ route('admin.removeProduct', $product->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:text-red-700">Remove</button>
+                            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                                Remove
+                            </button>
                         </form>
                     </td>
                 </tr>

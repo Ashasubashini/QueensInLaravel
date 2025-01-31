@@ -123,7 +123,9 @@
             </div>
             @foreach ($products as $product)
             <div class="product-card">
-                <img class="product w-full h-96 object-cover rounded-lg shadow-lg" src="{{ $product->image }}" alt="{{ $product->name }}">
+                <img class="product w-full h-96 object-cover rounded-lg shadow-lg" 
+                    src="{{ asset('storage/' . $product->image) }}" 
+                    alt="{{ $product->name }}">                
                 <div class="card-info">
                     <h2 class="text-2xl font-semibold text-gray-900">{{ $product->name }}</h2>
                     <p class="text-gray-600 mt-2">{{ $product->small_description }}</p>
