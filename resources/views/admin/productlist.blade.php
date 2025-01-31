@@ -22,7 +22,7 @@
                     <td class="px-6 py-4">{{ $product->price }}</td>
                     <td class="px-6 py-4">{{ $product->quantity }}</td>
                     <td class="px-6 py-4">
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover">
+                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-20 h-20 object-cover">
                     </td>
                     <td class="px-6 py-4">
                         <form action="{{ route('admin.removeProduct', $product->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this product?');">
