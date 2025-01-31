@@ -5,14 +5,10 @@
             
             <p>Welcome, {{ auth()->user()->name }}!</p>
             
-            @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(isset($users))
+            @if(isset($users) && count($users) > 0)
                 @include('admin.userlist')
+            @else
+                <p>No users found.</p>
             @endif
         </div>
     </div>

@@ -28,23 +28,23 @@ Route::get('/watchmaking', function () {
 })->name('watchmaking');
 
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified',
+// ])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     })->name('dashboard');
+// });
 
 //roles
-Route::get('/admin', function () {
-    if (Auth::user()->role !== 'admin') {
-        abort(403, 'Unauthorized access');
-    }
-    return view('admin.dashboard');
-})->middleware(['auth']);
+// Route::get('/admin', function () {
+//     if (Auth::user()->role !== 'admin') {
+//         abort(403, 'Unauthorized access');
+//     }
+//     return view('admin.dashboard');
+// })->middleware(['auth']);
 
 //product
 
@@ -63,9 +63,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [UserController::class, 'showUsers'])->name('admin.dashboard');
     Route::delete('/admin/users/{id}', [UserController::class, 'removeUser'])->name('admin.removeUser');
+    Route::get('/admindashboard', [AdminDashboardController::class, 'index'])->name('admindashboard');
 });
-Route::get('/admindashboard', [AdminDashboardController::class, 'index'])->name('admindashboard')->middleware('auth');
-
 
 
 
