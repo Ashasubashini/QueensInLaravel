@@ -49,7 +49,7 @@
                             <!-- Quantity Control -->
                             <div class="mb-6">
                                 <label for="quantity" class="text-lg font-semibold">Quantity</label>
-                                <input id="quantity" type="number" min="1" max="{{ $product->quantity }}" value="1" class="mt-2 p-2 border border-gray-300 rounded-lg w-full" onchange="updateQuantity()">
+                                <input id="quantity" type="number" min="1" max="{{ $product->quantity }}" value="1" class="mt-2 p-2 border border-gray-300 rounded-lg w-full">
                             </div>
 
                             <!-- Error Message -->
@@ -58,12 +58,14 @@
                             </div>
 
                             <div class="flex space-x-4">
-                                <button type="submit" id="add-to-cart" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
+                                <button type="button" id="add-to-cart" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
                                     Add to Cart
                                 </button>
-                                <button id="buy-now" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
-                                    Buy Now
-                                </button>
+                                <a href="{{ route('index') }}">
+                                    <button type="button" id="buy-now" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
+                                        Buy Now
+                                    </button>
+                                </a>
                             </div>
                         </div>
 
@@ -80,57 +82,66 @@
             </div>
         </div>
     </div>
-
     <script>
-        document.getElementById('add-to-cart').addEventListener('click', function () {
-            @guest
-                // Redirect to login if the user is not authenticated
-                window.location.href = "{{ route('login') }}";
-            @else
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add to Cart Button
+            document.getElementById('add-to-cart').addEventListener('click', function () {
                 var quantity = parseInt(document.getElementById('quantity').value);
                 if (quantity > 3) {
                     document.getElementById('error-message').classList.remove('hidden');
                 } else {
                     document.getElementById('error-message').classList.add('hidden');
                     alert('Product added to cart');
-                    // Make an AJAX request or form submission to add the product to the cart
+                    
+                    // Inject productId dynamically
+                    var productId = "{{ $product->id }}";  // Use Blade to inject product ID
+        
+                    // Handle special characters for strings like product name or description
+                    var productName = "{{ $product->name }}";  // Dynamically inject product name
+                    
+                    fetch("{{ route('cart.add') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            quantity: quantity,
+                            product_name: productName
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message); // Show success message or update the UI
+                    })
+                    .catch(error => console.error('Error:', error));
                 }
-            @endguest
-        });
+            });
     
-        document.getElementById('buy-now').addEventListener('click', function () {
-            @guest
-                // Redirect to login if the user is not authenticated
-                window.location.href = "{{ route('login') }}";
-            @else
-                var quantity = parseInt(document.getElementById('quantity').value);
-                alert('Proceeding to checkout with ' + quantity + ' items');
-                // Redirect to the checkout page
-            @endguest
-        });
-       
-        document.getElementById('add-to-cart').addEventListener('click', function () {
-            var quantity = document.getElementById('quantity').value;
-            var productId = "{{ $product->id }}";
-
-            fetch("{{ route('cart.add') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: quantity
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => console.error('Error:', error));
+            // Buy Now Button
+            document.getElementById('buy-now').addEventListener('click', function () {
+                @guest
+                    window.location.href = "{{ route('login') }}";
+                @else
+                    const quantity = parseInt(document.getElementById('quantity').value);
+                    if (quantity > {{ $product->quantity }}) {
+                        alert('Quantity not available');
+                        return;
+                    }
+                    if (quantity > 3) {
+                        document.getElementById('error-message').classList.remove('hidden');
+                        return;
+                    }
+                    
+                    document.getElementById('checkout-quantity').value = quantity;
+                    document.getElementById('checkout-form').submit();
+                @endguest
+            });
         });
     </script>
+    
+    
 </body>
-
 </html>
+

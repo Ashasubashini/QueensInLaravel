@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\StripeController;
 
 //pages
 Route::get('/about', function () {
@@ -54,3 +55,8 @@ Route::get('/admin/products/add', function () {
     return view('product.addProduct');  // Correct view path
 })->name('admin.addProduct');
 Route::get('/admin/products/list', [ProductController::class, 'showProducts'])->name('admin.productList');
+
+Route::get('/index', [StripeController::class, 'index'])->name('index');
+Route::post('/checkout', [StripeController::class, 'checkout'])->name('checkout')->middleware('auth');
+Route::get('/success', [StripeController::class, 'success'])->name('success');
+Route::get('/cancel', [StripeController::class, 'cancel'])->name('cancel');
