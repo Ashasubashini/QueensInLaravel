@@ -93,12 +93,9 @@
                     document.getElementById('error-message').classList.add('hidden');
                     alert('Product added to cart');
                     
-                    // Inject productId dynamically
-                    var productId = "{{ $product->id }}";  // Use Blade to inject product ID
+                    var productId = "{{ $product->id }}";  
         
-                    // Handle special characters for strings like product name or description
-                    var productName = "{{ $product->name }}";  // Dynamically inject product name
-                    
+                    var productName = "{{ $product->name }}";  
                     fetch("{{ route('cart.add') }}", {
                         method: "POST",
                         headers: {
@@ -113,7 +110,7 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        alert(data.message); // Show success message or update the UI
+                        alert(data.message); 
                     })
                     .catch(error => console.error('Error:', error));
                 }
