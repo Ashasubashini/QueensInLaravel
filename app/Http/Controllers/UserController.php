@@ -9,7 +9,6 @@ class UserController extends Controller
 {
     public function showUsers()
     {
-        // Get all users except the current admin
         $users = User::where('id', '!=', auth()->id())
                     ->where('role', '!=', 'admin')
                     ->get();

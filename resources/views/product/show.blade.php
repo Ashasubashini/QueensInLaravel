@@ -97,91 +97,104 @@
     </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const quantityInput = document.getElementById('quantity');
-        const totalPriceElement = document.getElementById('total-price');
-        const addToCartButton = document.getElementById('add-to-cart');
-        const buyNowButton = document.getElementById('buy-now');
-        const errorMessage = document.getElementById('error-message');
-        const checkoutQuantityInput = document.getElementById('checkout-quantity'); // Get the hidden input
-        
-        const productPrice = parseFloat("{{ $product->price }}"); // Get product price from backend
-        const maxQuantity = parseInt("{{ $product->quantity }}"); // Get available stock
+    const quantityInput = document.getElementById('quantity');
+    const totalPriceElement = document.getElementById('total-price');
+    const addToCartButton = document.getElementById('add-to-cart');
+    const buyNowButton = document.querySelector("form button[type='submit']"); // Adjusted for correct button reference
+    const errorMessage = document.getElementById('error-message');
+    const checkoutQuantityInput = document.getElementById('checkout-quantity'); // Get the hidden input
+    
+    const productPrice = parseFloat("{{ $product->price }}"); // Get product price from backend
+    const maxQuantity = parseInt("{{ $product->quantity }}"); // Get available stock
 
-        // Function to update total price
-        function updateTotalPrice() {
-            let quantity = parseInt(quantityInput.value);
+    // Function to update total price
+    function updateTotalPrice() {
+        let quantity = parseInt(quantityInput.value);
 
-            if (isNaN(quantity) || quantity < 1) {
-                quantity = 1; // Default to 1 if invalid
-                quantityInput.value = 1;
-            }
-
-            if (quantity > maxQuantity) {
-                quantity = maxQuantity; // Prevent exceeding stock
-                quantityInput.value = maxQuantity;
-            }
-
-            const total = productPrice * quantity;
-            totalPriceElement.textContent = `$${total.toFixed(2)}`; // Update total price
-            
-            // Update the hidden input with the current quantity
-            checkoutQuantityInput.value = quantity;
+        if (isNaN(quantity) || quantity < 1) {
+            quantity = 1; // Default to 1 if invalid
+            quantityInput.value = 1;
         }
 
-        // Listen for quantity change
-        quantityInput.addEventListener('input', updateTotalPrice);
+        if (quantity > maxQuantity) {
+            quantity = maxQuantity; // Prevent exceeding stock
+            quantityInput.value = maxQuantity;
+        }
 
-        // Add to Cart Button Click
-        addToCartButton.addEventListener('click', function () {
-            let quantity = parseInt(quantityInput.value);
+        const total = productPrice * quantity;
+        totalPriceElement.textContent = `$${total.toFixed(2)}`; // Update total price
+        
+        // Update the hidden input with the current quantity
+        checkoutQuantityInput.value = quantity;
+    }
 
-            if (quantity > 3) {
-                errorMessage.classList.remove('hidden');
-            } else {
-                errorMessage.classList.add('hidden');
+    // Disable the Buy Now button if out of stock
+    function disableBuyNowButton() {
+        if (maxQuantity === 0) {
+            buyNowButton.disabled = true;
+            buyNowButton.classList.add('bg-gray-400', 'cursor-not-allowed'); // Add styles for a disabled button
+            buyNowButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+        } else {
+            buyNowButton.disabled = false;
+            buyNowButton.classList.add('bg-green-600', 'hover:bg-green-700');
+            buyNowButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+        }
+    }
 
-                fetch("{{ route('cart.add') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    body: JSON.stringify({
-                        product_id: "{{ $product->id }}",
-                        quantity: quantity,
-                        total_price: productPrice * quantity
-                    })
+    // Listen for quantity change
+    quantityInput.addEventListener('input', updateTotalPrice);
+
+    // Add to Cart Button Click
+    addToCartButton.addEventListener('click', function () {
+        let quantity = parseInt(quantityInput.value);
+
+        if (quantity > 3) {
+            errorMessage.classList.remove('hidden');
+        } else {
+            errorMessage.classList.add('hidden');
+
+            fetch("{{ route('cart.add') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    product_id: "{{ $product->id }}",
+                    quantity: quantity,
+                    total_price: productPrice * quantity
                 })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message); 
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        });
-
-        // Buy Now Button Click
-        buyNowButton.addEventListener('click', function () {
-            let quantity = parseInt(quantityInput.value);
-
-            if (quantity > maxQuantity) {
-                alert('Quantity not available');
-                return;
-            }
-
-            if (quantity > 3) {
-                errorMessage.classList.remove('hidden');
-                return;
-            }
-
-            document.getElementById('checkout-quantity').value = quantity;
-            document.getElementById('checkout-form').submit();
-        });
-
-        // Initialize total price on page load
-        updateTotalPrice();
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); 
+            })
+            .catch(error => console.error('Error:', error));
+        }
     });
 
+    // Buy Now Button Click
+    buyNowButton.addEventListener('click', function () {
+        let quantity = parseInt(quantityInput.value);
+
+        if (quantity > maxQuantity) {
+            alert('Quantity not available');
+            return;
+        }
+
+        if (quantity > 3) {
+            errorMessage.classList.remove('hidden');
+            return;
+        }
+
+        document.getElementById('checkout-quantity').value = quantity;
+        document.getElementById('checkout-form').submit();
+    });
+
+    // Initialize total price and disable Buy Now button if out of stock
+    updateTotalPrice();
+    disableBuyNowButton(); // Disable buy now button if product is out of stock
+});
     
 </script>   
 </body>

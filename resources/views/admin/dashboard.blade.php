@@ -20,6 +20,16 @@
                 </a>
                 @include('admin.productlist')
             </div>
+
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h3 class="text-xl font-semibold mb-4">Order List</h3>
+                @foreach($orders as $order)
+                    <div class="mb-2">
+                        <p>Order ID: {{ $order->id }}</p>
+                        <p>Status: {{ $order->status }}</p>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </div>

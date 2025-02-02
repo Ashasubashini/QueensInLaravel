@@ -6,6 +6,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\OrderController;
+
 
 //pages
 Route::get('/about', function () {
@@ -43,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [UserController::class, 'showUsers'])->name('admin.dashboard');
     Route::delete('/admin/users/{id}', [UserController::class, 'removeUser'])->name('admin.removeUser');
     Route::get('/admindashboard', [AdminDashboardController::class, 'index'])->name('admindashboard');
+
 });
 
 // Product Management Routes
@@ -61,3 +64,8 @@ Route::post('/checkout', [StripeController::class, 'checkout'])->name('checkout'
 Route::get('/success', [StripeController::class, 'success'])->name('success');
 Route::get('/cancel', [StripeController::class, 'cancel'])->name('cancel');
 Route::post('/checkout/process', [StripeController::class, 'processPayment'])->name('checkout.process');
+
+Route::middleware('auth')->prefix('admin/orders')->name('admin.orders.')->group(function () {
+    Route::get('/', [OrderController::class, 'index'])->name('index'); // To show the order list
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'showDashboard'])->name('admin.dashboard');
+});
