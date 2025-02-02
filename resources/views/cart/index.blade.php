@@ -25,6 +25,12 @@
                             Remove
                         </button>
                     </form>
+                    <form action="{{ route('checkout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 w-full mt-6">
+                            Buy Now
+                        </button>
+                    </form>
                 </div>
             @endforeach
         </div>
