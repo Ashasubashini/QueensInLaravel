@@ -49,13 +49,13 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Product Management Routes
-Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products');  // This is the route you need
+Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products');  
 Route::get('/admin/products/{id}/edit', [ProductController::class, 'edit'])->name('product.editProduct');
 Route::put('/admin/products/{id}', [ProductController::class, 'updateProduct'])->name('admin.updateProduct');
 Route::delete('/admin/products/{id}', [ProductController::class, 'removeProduct'])->name('admin.removeProduct');
 Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.storeProduct');
 Route::get('/admin/products/add', function () {
-    return view('product.addProduct');  // Correct view path
+    return view('product.addProduct'); 
 })->name('admin.addProduct');
 Route::get('/admin/products/list', [ProductController::class, 'showProducts'])->name('admin.productList');
 
@@ -66,6 +66,6 @@ Route::get('/cancel', [StripeController::class, 'cancel'])->name('cancel');
 Route::post('/checkout/process', [StripeController::class, 'processPayment'])->name('checkout.process');
 
 Route::middleware('auth')->prefix('admin/orders')->name('admin.orders.')->group(function () {
-    Route::get('/', [OrderController::class, 'index'])->name('index'); // To show the order list
+    Route::get('/', [OrderController::class, 'index'])->name('index'); 
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'showDashboard'])->name('admin.dashboard');
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,10 +16,12 @@ class DashboardController extends Controller
         if (Auth::user()->role === 'admin') {
             $users = User::all();
             $products = Product::all();
+            $orders =Order::with('orderItems.product')->get();  
         
-            return view('dashboard', compact('users', 'products'));
+            return view('dashboard', compact('users', 'products', 'orders'));
         }
         $cartItems = auth()->user()->cart()->get();
-        return view('dashboard', compact('cartItems'));
+        $orders=[];
+        return view('dashboard', compact('cartItems, orders'));
     }
 }
