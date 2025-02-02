@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Stripe\Stripe;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -24,6 +25,9 @@ class StripeController extends Controller
         $quantity = $request->input('quantity', 1);
         $totalAmount = $product->price * $quantity; // Calculate total price based on quantity
 
+        // Store product ID and quantity in the session
+        session(['product_id' => $product->id, 'quantity' => $quantity]);
+
         // Create a Stripe session
         $session = Session::create([
             'payment_method_types' => ['card'],
@@ -45,8 +49,26 @@ class StripeController extends Controller
         // Redirect the user to the Stripe Checkout page
         return redirect()->away($session->url);
     }
+
     public function success()
     {
-        return view('index');
+        // Retrieve product ID and quantity from the session
+        $productId = session('product_id');
+        $quantityPurchased = session('quantity');
+
+        // Find the product
+        $product = Product::find($productId);
+
+        if ($product) {
+            // Update the product quantity
+            $product->quantity -= $quantityPurchased;
+            $product->save();
+        }
+
+        // Clear the session data
+        session()->forget(['product_id', 'quantity']);
+
+        // Load the success view
+        return view('success');
     }
 }
