@@ -56,23 +56,29 @@
                             <div id="error-message" class="text-red-500 hidden mb-4">
                                 You can't add more than 3 items to the cart.
                             </div>
-                            <div class="mb-6">
-                                <span class="text-lg font-semibold">Total Price: </span>
-                                <span id="total-price" class="text-3xl font-semibold text-gray-900">${{ $product->price }}</span>
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="text-3xl font-semibold text-gray-900">
+                                    Price: ${{ $product->price }}
+                                </span>
+                                <span class="text-3xl font-semibold text-green-600">
+                                    Total: <span id="total-price">${{ $product->price }}</span>
+                                </span>
                             </div>
 
                             <div class="flex space-x-4">
                                 <button type="button" id="add-to-cart" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
                                     Add to Cart
                                 </button>
+                                
                                 <form action="{{ route('checkout') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <input type="hidden" name="quantity" value="1"> <!-- Default to 1 -->
+                                    <input type="hidden" id="checkout-quantity" name="quantity" value="1"> <!-- Dynamically update this value -->
                                     <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md">
                                         Buy Now
                                     </button>
                                 </form>
+                                
                             </div>
                         </div>
 
@@ -89,63 +95,95 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Add to Cart Button
-            document.getElementById('add-to-cart').addEventListener('click', function () {
-                var quantity = parseInt(document.getElementById('quantity').value);
-                if (quantity > 3) {
-                    document.getElementById('error-message').classList.remove('hidden');
-                } else {
-                    document.getElementById('error-message').classList.add('hidden');
-                    alert('Product added to cart');
-                    
-                    var productId = "{{ $product->id }}";  
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInput = document.getElementById('quantity');
+        const totalPriceElement = document.getElementById('total-price');
+        const addToCartButton = document.getElementById('add-to-cart');
+        const buyNowButton = document.getElementById('buy-now');
+        const errorMessage = document.getElementById('error-message');
+        const checkoutQuantityInput = document.getElementById('checkout-quantity'); // Get the hidden input
         
-                    var productName = "{{ $product->name }}";  
-                    fetch("{{ route('cart.add') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                        },
-                        body: JSON.stringify({
-                            product_id: productId,
-                            quantity: quantity,
-                            product_name: productName
-                        })
+        const productPrice = parseFloat("{{ $product->price }}"); // Get product price from backend
+        const maxQuantity = parseInt("{{ $product->quantity }}"); // Get available stock
+
+        // Function to update total price
+        function updateTotalPrice() {
+            let quantity = parseInt(quantityInput.value);
+
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 1; // Default to 1 if invalid
+                quantityInput.value = 1;
+            }
+
+            if (quantity > maxQuantity) {
+                quantity = maxQuantity; // Prevent exceeding stock
+                quantityInput.value = maxQuantity;
+            }
+
+            const total = productPrice * quantity;
+            totalPriceElement.textContent = `$${total.toFixed(2)}`; // Update total price
+            
+            // Update the hidden input with the current quantity
+            checkoutQuantityInput.value = quantity;
+        }
+
+        // Listen for quantity change
+        quantityInput.addEventListener('input', updateTotalPrice);
+
+        // Add to Cart Button Click
+        addToCartButton.addEventListener('click', function () {
+            let quantity = parseInt(quantityInput.value);
+
+            if (quantity > 3) {
+                errorMessage.classList.remove('hidden');
+            } else {
+                errorMessage.classList.add('hidden');
+
+                fetch("{{ route('cart.add') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        product_id: "{{ $product->id }}",
+                        quantity: quantity,
+                        total_price: productPrice * quantity
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message); 
-                    })
-                    .catch(error => console.error('Error:', error));
-                }
-            });
-    
-            // Buy Now Button
-            document.getElementById('buy-now').addEventListener('click', function () {
-                @guest
-                    window.location.href = "{{ route('login') }}";
-                @else
-                    const quantity = parseInt(document.getElementById('quantity').value);
-                    if (quantity > {{ $product->quantity }}) {
-                        alert('Quantity not available');
-                        return;
-                    }
-                    if (quantity > 3) {
-                        document.getElementById('error-message').classList.remove('hidden');
-                        return;
-                    }
-                    
-                    document.getElementById('checkout-quantity').value = quantity;
-                    document.getElementById('checkout-form').submit();
-                @endguest
-            });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message); 
+                })
+                .catch(error => console.error('Error:', error));
+            }
         });
-    </script>
+
+        // Buy Now Button Click
+        buyNowButton.addEventListener('click', function () {
+            let quantity = parseInt(quantityInput.value);
+
+            if (quantity > maxQuantity) {
+                alert('Quantity not available');
+                return;
+            }
+
+            if (quantity > 3) {
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('checkout-quantity').value = quantity;
+            document.getElementById('checkout-form').submit();
+        });
+
+        // Initialize total price on page load
+        updateTotalPrice();
+    });
+
     
-    
+</script>   
 </body>
 </html>
 

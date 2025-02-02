@@ -60,3 +60,4 @@ Route::get('/index', [StripeController::class, 'index'])->name('index');
 Route::post('/checkout', [StripeController::class, 'checkout'])->name('checkout')->middleware('auth');
 Route::get('/success', [StripeController::class, 'success'])->name('success');
 Route::get('/cancel', [StripeController::class, 'cancel'])->name('cancel');
+Route::post('/checkout/process', [StripeController::class, 'processPayment'])->name('checkout.process');
