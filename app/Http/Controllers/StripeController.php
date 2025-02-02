@@ -1,54 +1,45 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Stripe\Stripe;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Stripe\Checkout\Session;
 
 class StripeController extends Controller
 {
-    public function index()
+    public function checkout(Request $request)
     {
-        $products = Product::all(); 
-        return view('index', compact('products'));    }
+        Stripe::setApiKey(config('stripe.sk'));
 
-    public function checkout(Request $request)  
-    {
-        \Stripe\Stripe::setApiKey(config('stripe.sk'));
+        // Fetch the product details
+        $product = Product::find($request->input('product_id'));
 
-
-        $productIds = $request->input('product_ids'); 
-
-        $products = Product::whereIn('id', $productIds)->get();
-
-        if ($products->isEmpty()) {
-            return redirect()->route('index')->with('error', 'Products not found');
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found');
         }
 
-        $lineItems = [];
-        foreach ($products as $product) {
-            $lineItems[] = [
+        $quantity = $request->input('quantity', 1); // Default to 1 if not provided
+
+        // Create the Stripe Checkout session
+        $session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
                 'price_data' => [
                     'currency' => 'usd',
                     'product_data' => [
                         'name' => $product->name,
                     ],
-                    'unit_amount' => $product->price * 100, 
+                    'unit_amount' => $product->price * 100,
                 ],
-                'quantity' => 1, 
-            ];
-        }
-
-        // Create the Stripe Checkout session
-        $_session = \Stripe\Checkout\Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => $lineItems,
+                'quantity' => $quantity,
+            ]],
             'mode' => 'payment',
             'success_url' => route('success'),
             'cancel_url' => route('cancel'),
         ]);
 
-        return redirect()->away($_session->url);
+        return redirect()->away($session->url);
     }
 
     public function success()

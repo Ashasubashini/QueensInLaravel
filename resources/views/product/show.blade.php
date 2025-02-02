@@ -56,16 +56,23 @@
                             <div id="error-message" class="text-red-500 hidden mb-4">
                                 You can't add more than 3 items to the cart.
                             </div>
+                            <div class="mb-6">
+                                <span class="text-lg font-semibold">Total Price: </span>
+                                <span id="total-price" class="text-3xl font-semibold text-gray-900">${{ $product->price }}</span>
+                            </div>
 
                             <div class="flex space-x-4">
                                 <button type="button" id="add-to-cart" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
                                     Add to Cart
                                 </button>
-                                <a href="{{ route('index') }}">
-                                    <button type="button" id="buy-now" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-200 transform hover:scale-105">
+                                <form action="{{ route('checkout') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="quantity" value="1"> <!-- Default to 1 -->
+                                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md">
                                         Buy Now
                                     </button>
-                                </a>
+                                </form>
                             </div>
                         </div>
 
