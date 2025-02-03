@@ -16,12 +16,14 @@ class DashboardController extends Controller
         if (Auth::user()->role === 'admin') {
             $users = User::all();
             $products = Product::all();
-            $orders =Order::with('orderItems.product')->get();  
+            $orders = Order::with('orderItems.product')->get();  
         
             return view('dashboard', compact('users', 'products', 'orders'));
         }
+
         $cartItems = auth()->user()->cart()->get();
-        $orders=[];
-        return view('dashboard', compact('cartItems, orders'));
+        $orders = []; 
+
+        return view('dashboard', compact('cartItems', 'orders'));  // Fixed syntax
     }
 }
