@@ -24,6 +24,6 @@ class DashboardController extends Controller
         $cartItems = auth()->user()->cart()->get();
         $orders = []; 
 
-        return view('dashboard', compact('cartItems', 'orders'));  // Fixed syntax
+        return view('dashboard', compact('cartItems', 'orders'));  
     }
 }

@@ -9,12 +9,14 @@ use Stripe\Checkout\Session;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+
 class StripeController extends Controller
 {
     public function checkout(Request $request)
     {
         Stripe::setApiKey(config('stripe.sk'));
 
+        // Check for product purchase
         if ($request->has('product_id')) {
             $product = Product::find($request->input('product_id'));
 
@@ -42,7 +44,9 @@ class StripeController extends Controller
                 'success_url' => route('success'),
                 'cancel_url' => route('cancel'),
             ]);
-        } elseif ($request->has('cart_item_id')) {
+        }
+        // Check for cart item purchase
+        elseif ($request->has('cart_item_id')) {
             $cartItem = Cart::where('id', $request->input('cart_item_id'))
                 ->where('user_id', auth()->id())
                 ->with('product')
@@ -76,7 +80,9 @@ class StripeController extends Controller
                 'success_url' => route('success'),
                 'cancel_url' => route('cancel'),
             ]);
-        } else {
+        }
+        // Check for multiple cart items
+        else {
             $cartItems = Cart::where('user_id', auth()->id())->with('product')->get();
 
             if ($cartItems->isEmpty()) {
@@ -116,6 +122,8 @@ class StripeController extends Controller
 
         return redirect()->away($session->url);
     }
+
+    // Handle successful payment
     public function success()
     {
         if (session('product_id') && session('quantity')) {

@@ -97,4 +97,8 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products')->with('success', 'Product added successfully');
     }
+    public function getProducts()
+    {
+        return response()->json(Product::all(), 200);
+    }
 }
